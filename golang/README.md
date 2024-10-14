@@ -5,6 +5,7 @@ worth a skim through to refresh '**_Go_**' in one go.
 ---
 
 ## Table of Contents
+
 - [Go Data Types](#go-data-types)
   - [1. Basic (Primitive) Types](#1-basic-primitive-types)
     - [a. Numeric Types](#a-numeric-types)
@@ -42,7 +43,8 @@ worth a skim through to refresh '**_Go_**' in one go.
   - [Errors](#errors)
   - [Defer](#defer)
   - [Panic](#panic)
-- [Types, Type Assertion, Type Switches](#types-type-assertions-type-switches)
+  - [Recover](#recover)
+- [Types, Type Assertions, Type Switches](#types-type-assertions-type-switches)
   - [Type Assertions](#type-assertions)
 
 ---
@@ -50,9 +52,11 @@ worth a skim through to refresh '**_Go_**' in one go.
 ## Go Data Types
 
 ### 1. Basic (Primitive) Types
+
 These are Go's fundamental types.
 
 #### a. Numeric Types
+
 - **Integer Types**: Store whole numbers.
   - **Signed Integers**: Hold positive and negative values.
     - `int`, `int8`, `int16`, `int32`, `int64`
@@ -70,30 +74,39 @@ These are Go's fundamental types.
   - `rune` (alias for `int32`, represents Unicode code points)
 
 #### b. Boolean Type
+
 - `bool`: Represents `true` or `false`.
 
 #### c. String Type
+
 - `string`: Sequence of UTF-8 encoded text.
 
 ---
 
 ### 2. Composite (Complex) Types
+
 These types are built using other types.
 
 #### a. Arrays
+
 - Fixed-size collection of elements of the same type.
+
   ```go
   var arr [5]int
   ```
 
 #### b. Slices
+
 - Dynamically-sized arrays.
+
   ```go
   var s []int = []int{1, 2, 3}
   ```
 
 #### c. Structs
+
 - Group related data with different types.
+
   ```go
   type Person struct {
       Name string
@@ -102,25 +115,33 @@ These types are built using other types.
   ```
 
 #### d. Maps
+
 - Collection of key-value pairs with unique keys.
+
   ```go
   var m map[string]int = make(map[string]int)
   ```
 
 #### e. Pointers
+
 - Store memory addresses of variables.
+
   ```go
   var p *int = &x
   ```
 
 #### f. Functions
+
 - Functions can be passed as variables.
+
   ```go
   var f func(int) int
   ```
 
 #### g. Channels
+
 - Facilitate communication between goroutines.
+
   ```go
   ch := make(chan int)
   ```
@@ -128,7 +149,9 @@ These types are built using other types.
 ---
 
 ### 3. Interface Types
+
 Interfaces define method signatures a type must implement, supporting polymorphism.
+
 ```go
 type Animal interface {
     Speak() string
@@ -140,13 +163,17 @@ type Animal interface {
 ### 4. Special Types
 
 #### a. Nil
+
 - Zero value for pointers, interfaces, maps, slices, channels, and function types.
+
   ```go
   var p *int = nil
   ```
 
 #### b. Constants
+
 - Declared with `const`, can be basic types like `int`, `float`, `string`, or `bool`.
+
   ```go
   const Pi = 3.14
   ```
@@ -156,13 +183,17 @@ type Animal interface {
 ### 5. User-Defined Types
 
 #### a. Type Alias
+
 - New names for existing types.
+
   ```go
   type Age int
   ```
 
 #### b. Custom Types
+
 - Create types that behave differently from their underlying type.
+
   ```go
   type Kilometers float64
   ```
@@ -287,28 +318,27 @@ type Animal interface {
 
 ### Maps
 
-
 - A Map will not throw an error if the value already exists. Instead, it overwrites the value with the newly provided value.
 - A `nil` map is essentially an empty map with a crucial limitation: you cannot add or modify any key-value pairs to it.
 - Attempting to do so will result in a `panic` with `runtime error`.
 - Map literals require `key-value pairs`, unlike 'Struct Literals'.
 - When you pass a map to a function/method, you are copying just the pointer to the underlying data structure(`runtime.hmap`), not the data itself. This allows modifications to the map within the function to affect the original map.
-- **Iteration Order**: 
+- **Iteration Order**:
   - A key difference between slices and maps is that **maps are not ordered**. When you iterate over a map using a `range` loop, the order of the keys is random and changes from one iteration to the next.
   - If you require a consistent iteration order, you need to maintain a separate data structure to manage the order (e.g., a sorted slice of keys).
 - When looking up keys, Go returns two values: the value associated with the key and a boolean `ok` indicating if the key exists in the map.
   - **Use Cases:**
-     - Key Doesn’t Exist: If the key is not present in the map, `ok` will be false, and the returned value will be the zero value for that type (e.g., an empty string).
-     - Key Exists But No Definition: If the key exists but has no meaningful value (e.g., `dictionary["existingWord"]` returns ""), `ok` will be true, indicating the key was found, but the value is empty.
+    - Key Doesn’t Exist: If the key is not present in the map, `ok` will be false, and the returned value will be the zero value for that type (e.g., an empty string).
+    - Key Exists But No Definition: If the key exists but has no meaningful value (e.g., `dictionary["existingWord"]` returns ""), `ok` will be true, indicating the key was found, but the value is empty.
 
 - **Definition**: Maps are unordered collections of key-value pairs, where each key is unique.
 - **Use Cases**: Efficiently store and retrieve data based on keys, such as counting occurrences or grouping items.
 - **Tips**: Always initialize maps before use, as `nil` maps cannot be modified.
-- **Lesser-known facts**: 
-	- The iteration order over maps is randomized; thus, a consistent order must be managed externally if required.
-	- Maps are not safe for concurrent use:
-		- If you need to read from and write to a map from concurrently executing goroutines, the accesses must be mediated by some kind of synchronization mechanism. 
-		- One common way to protect maps is with `sync.RWMutex`.
+- **Lesser-known facts**:
+ 	- The iteration order over maps is randomized; thus, a consistent order must be managed externally if required.
+ 	- Maps are not safe for concurrent use:
+  		- If you need to read from and write to a map from concurrently executing goroutines, the accesses must be mediated by some kind of synchronization mechanism.
+  		- One common way to protect maps is with `sync.RWMutex`.
 
 ---
 
@@ -317,13 +347,17 @@ type Animal interface {
 - Go allows initializing structs using struct literals.
 - Struct literals can be defined in two ways:
   - **Positional**: Assigning values in the order of struct fields.
+
     ```go
     p := Person{"Alice", 30}
     ```
+
   - **Named**: Assigning values by field names.
+
     ```go
     p := Person{Name: "Alice", Age: 30}
     ```
+
 - Named fields allow flexibility in initialization order and improve code readability.
 
 - **Definition**: A way to create and initialize structs at the same time.
@@ -345,7 +379,7 @@ type Animal interface {
 - **Definition**:  A method is a function that is associated with a specific type, allowing it to operate on the data contained in that type.
 - **Use Cases**: Encapsulation of behavior related to data structures.
 - **Tips**: Use pointer receivers for large structs to avoid copying.
-- **Lesser-known facts**: 
+- **Lesser-known facts**:
   - Methods can be defined for any type, including built-in types.
   - Go does not support method overloading based on parameter types.
 
@@ -427,4 +461,3 @@ type Animal interface {
 - **Use Cases**: Useful in scenarios where you need to assert the specific type of an interface, such as when handling different types through a common interface.
 - **Tips**: Use the two-value form of type assertion to avoid panics and to handle cases where the type may not match.
 - **Lesser-known facts**: Type assertions are similar in syntax to map lookups, making them intuitive for Go developers. Additionally, an empty interface (`interface{}`) can hold any type, allowing for flexible design but also requiring careful type assertions.
-
