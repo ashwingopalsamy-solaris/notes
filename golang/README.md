@@ -262,6 +262,7 @@ type Animal interface {
 - Slices have a length and capacity. When you attempt to change a slice's capacity beyond its limit, you get a `slice bounds out of range` error.
 - Slices can grow as needed by using the `append` function, which may result in a new array being allocated.
 - When you append to a slice beyond its capacity, Go automatically reallocates the underlying array and adjusts the slice's pointer.
+
 - **Definition**: Slices are dynamically-sized, flexible views into the elements of an array.
 - **Use Cases**: Ideal for handling collections of items where the size may change.
 - **Tips**: Use the built-in `append` function to safely add elements to slices.
@@ -300,7 +301,6 @@ type Animal interface {
      - Key Doesn’t Exist: If the key is not present in the map, `ok` will be false, and the returned value will be the zero value for that type (e.g., an empty string).
      - Key Exists But No Definition: If the key exists but has no meaningful value (e.g., `dictionary["existingWord"]` returns ""), `ok` will be true, indicating the key was found, but the value is empty.
 
-
 - **Definition**: Maps are unordered collections of key-value pairs, where each key is unique.
 - **Use Cases**: Efficiently store and retrieve data based on keys, such as counting occurrences or grouping items.
 - **Tips**: Always initialize maps before use, as `nil` maps cannot be modified.
@@ -325,6 +325,7 @@ type Animal interface {
     p := Person{Name: "Alice", Age: 30}
     ```
 - Named fields allow flexibility in initialization order and improve code readability.
+
 - **Definition**: A way to create and initialize structs at the same time.
 - **Use Cases**: Creating instances of structs easily and clearly.
 - **Tips**: Prefer named literals for clarity, especially with large structs.
@@ -340,6 +341,7 @@ type Animal interface {
 - The receiver can be a value or a pointer type.
 - One cannot declare a method with a receiver whose type is defined in another package (including internal packages).
 - Methods allow you to define behaviors for types.
+
 - **Definition**:  A method is a function that is associated with a specific type, allowing it to operate on the data contained in that type.
 - **Use Cases**: Encapsulation of behavior related to data structures.
 - **Tips**: Use pointer receivers for large structs to avoid copying.
@@ -352,6 +354,7 @@ type Animal interface {
 - Interfaces define a set of method signatures.
 - A type implements an interface by implementing its methods.
 - Go does not require explicit declaration of intent to implement an interface.
+
 - **Definition**: An interface is a type that specifies a contract of methods without implementing them, allowing different types to satisfy that interface.
 - **Use Cases**: Enable polymorphism and allow functions to operate on different types through a common interface.
 - **Tips**: Use interfaces to define common behavior without tightly coupling types.
@@ -367,6 +370,7 @@ type Animal interface {
 - Functions can return an error value along with the result.
 - The idiomatic way to handle errors in Go is to check the error value immediately after calling a function that returns an error.
 - More on errors at: [Don’t just check errors, handle them gracefully](https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully)
+
 - **Definition**: An error in Go is represented by the `error` type, used to signal an issue that occurred during a function's execution.
 - **Use Cases**: Returning errors allows functions to communicate failure and handle it gracefully.
 - **Tips**: Always check for errors after a function call that can return one.
@@ -379,6 +383,7 @@ type Animal interface {
 - Defer statements are executed in **last-in-first-out** order.
 - Deferred functions may read and assign to the returning function’s named return values.
 - Defer calls are evaluated immediately but the function call is not executed until the surrounding function returns.
+
 - **Definition**: The `defer` statement schedules a function call to be run after the function completes, useful for cleanup tasks.
 - **Use Cases**: Closing files, unlocking mutexes, and managing other cleanup tasks.
 - **Tips**: Use `defer` to ensure that cleanup happens even if a function exits unexpectedly.
