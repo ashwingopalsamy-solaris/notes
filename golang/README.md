@@ -215,6 +215,8 @@ type Animal interface {
 | map                         | nil                                           |
 | channel                     | nil                                           |
 | function                    | nil                                           |
+| interface                   | nil                                           |
+| unsafe pointer              | nil                                           |
 
 - **Definition**: Zero values are the default values assigned to variables of a type when no explicit value is given.
 - **Use Cases**: Useful for initializing variables without needing to set them to a specific value.
@@ -291,6 +293,7 @@ type Animal interface {
 - Slices are like references to arrays. When you create a slice from an existing array, you are interacting with the underlying array.
 - Zero value of a slice is `nil`.
 - Slices have a length and capacity. When you attempt to change a slice's capacity beyond its limit, you get a `slice bounds out of range` error.
+- When creating a 'slice' from an 'array', Slice Length calculated by `high` - `low`, Slice Capacity calculated by array `length` - `low`.
 - Slices can grow as needed by using the `append` function, which may result in a new array being allocated.
 - When you append to a slice beyond its capacity, Go automatically reallocates the underlying array and adjusts the slice's pointer.
 
@@ -335,10 +338,10 @@ type Animal interface {
 - **Use Cases**: Efficiently store and retrieve data based on keys, such as counting occurrences or grouping items.
 - **Tips**: Always initialize maps before use, as `nil` maps cannot be modified.
 - **Lesser-known facts**:
- 	- The iteration order over maps is randomized; thus, a consistent order must be managed externally if required.
- 	- Maps are not safe for concurrent use:
-  		- If you need to read from and write to a map from concurrently executing goroutines, the accesses must be mediated by some kind of synchronization mechanism.
-  		- One common way to protect maps is with `sync.RWMutex`.
+  - The iteration order over maps is randomized; thus, a consistent order must be managed externally if required.
+  - Maps are not safe for concurrent use:
+    - If you need to read from and write to a map from concurrently executing goroutines, the accesses must be mediated by some kind of synchronization mechanism.
+    - One common way to protect maps is with `sync.RWMutex`.
 
 ---
 
